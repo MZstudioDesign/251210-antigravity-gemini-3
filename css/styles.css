@@ -124,14 +124,13 @@ body.custom-cursor-active a {
     position: relative;
     z-index: 2;
     text-align: center;
-    mix-blend-mode: overlay;
 }
 
 .hero-title {
     font-family: var(--font-heading);
     font-weight: 700;
     font-size: 8vw;
-    line-height: 0.9;
+    line-height: 1.1;
     text-transform: uppercase;
     display: flex;
     flex-direction: column;
@@ -139,9 +138,8 @@ body.custom-cursor-active a {
 
 .hero-title .line {
     display: block;
-    opacity: 0;
-    /* Animated in JS */
-    transform: translateY(50px);
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .hero-subtitle {
@@ -149,7 +147,7 @@ body.custom-cursor-active a {
     font-size: 1.2rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    opacity: 0;
+    opacity: 1;
 }
 
 .scroll-indicator {

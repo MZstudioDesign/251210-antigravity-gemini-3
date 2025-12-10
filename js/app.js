@@ -80,16 +80,33 @@ const container = document.getElementById('hero-canvas');
 renderer.setSize(window.innerWidth, window.innerHeight);
 container.appendChild(renderer.domElement);
 
-// Load Texture
+// Load Texture with Error Handling
 const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('assets/hero-bg.png');
+textureLoader.load(
+    'assets/hero-bg.png',
+    (texture) => {
+        // Success: Update material and add to scene
+        material.uniforms.uTexture.value = texture;
+    },
+    undefined, // onProgress
+    (error) => {
+        console.warn('Hero background texture failed to load (likely CORS). Using CSS fallback.', error);
+        // We do NOT add the plane to the scene if texture fails, 
+        // letting the CSS background show through.
+        scene.remove(plane);
+
+        // OR: If you still want the wave effect but black/default:
+        // material.uniforms.uTexture.value = new THREE.Texture(); // empty texture
+    }
+);
 
 // Create Plane with Shader
 const geometry = new THREE.PlaneGeometry(16, 9, 32, 32);
 const material = new THREE.ShaderMaterial({
     uniforms: {
         uTime: { value: 0 },
-        uTexture: { value: texture },
+        // Initialize with null or empty, loaded later
+        uTexture: { value: new THREE.Texture() },
         uMouse: { value: new THREE.Vector2(0, 0) }
     },
     vertexShader: `
@@ -131,6 +148,9 @@ window.addEventListener('mousemove', (e) => {
     mouse.x = e.clientX / window.innerWidth;
     mouse.y = 1.0 - (e.clientY / window.innerHeight);
     material.uniforms.uMouse.value.set(mouse.x, mouse.y);
+
+    // Enable custom cursor if JS is running
+    document.body.classList.add('custom-cursor-active');
 });
 
 // Animation Loop
